@@ -1,4 +1,5 @@
-A simple AOP implementation for Node.  It works either with standalone functions or with object methods.
+A simple AOP implementation for Node.  It works either with standalone functions or with object methods.  And be used
+on the client-side with Browserify too.
 
 ## Usage
 ### Standalone functions
