@@ -12,9 +12,9 @@ function weave(type, advised, advisedFunc, aopProxy) {
 
     if (!advisedFunc) {
         standalone = true;
-        $execute = arguments[1];
+        $execute = advised;
     } else {
-        $execute = $.proxy(advised, advisedFunc);
+        $execute = advised[advisedFunc].bind(advised);
     }
     aopProxy.advised = $execute;
 
