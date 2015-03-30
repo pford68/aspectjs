@@ -1,5 +1,6 @@
 /**
- *
+ * A simple AOP implementation for JavaScript
+ * 
  * @author Philip Ford
  */
 
