@@ -2,11 +2,18 @@ A simple AOP implementation for Node.  It works either with standalone functions
 
 ## Usage
 ### Standalone functions
-Both the advice and joinpoints can be standalone functions:  ``aspectjs.addAdvice(advice).before(joinpoint)``
-Or the advice can be an object method, while the joinpoint is standalone: ``aspectjs.addAdvice(obj, 'methodname').after(joinpoint)``
+Both the advice and joinpoints can be standalone functions:  
+
+``aspectjs.addAdvice(advice).before(joinpoint)``
+
+Or the advice can be an object method, while the joinpoint is standalone: 
+
+``aspectjs.addAdvice(obj, 'methodname').after(joinpoint)``
 
 ### Object methods
-Both the advice and joinpoint can be object meothds: ``aspectjs.addAdvice(obj, 'methodname').before(joinpoint, 'methodname')``
+Both the advice and joinpoint can be object methods: 
+
+``aspectjs.addAdvice(obj, 'methodname').before(joinpoint, 'methodname')``
 
 
 ## Examples
