@@ -2,7 +2,7 @@
  * Test suite for AspectJS
  *
  */
-var addAdvice = require("../../src/index").addAdvice;
+var addAdvice = require("../../index").addAdvice;
 
 describe("aop", function(){
 
