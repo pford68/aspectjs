@@ -18,32 +18,36 @@ function weave(type, advised, advisedFunc, aopProxy) {
     }
     aopProxy.advised = $execute;
 
-    if (type == 'before') {
-        f = function () {
-            var result = adviser.apply(advised, arguments);		    // Invoke the advice.
-            result = result && !transfer ? [result] : null;
-            return $execute.apply(advised, result || arguments);	// Call the original function.
-        };
-    } else if (type == 'after') {
-        f = function () {
-            var result = $execute.apply(advised, arguments);	// Call the original function and store the result.
-            result = result && !transfer ? [result] : null;
-            return adviser.apply(advised, result || arguments);				// Invoke the advice.
-        };
-    } else if (type == 'around') {
-        var invocation = {
-            proceed: function () {
-                return this.method.apply(this, this.args);
-            }
-        };
-        f = function () {
-            invocation.args = arguments;
-            invocation.method = $execute;
-            invocation.name = advisedFunc;
-            return adviser(invocation);
-        };
-    } else {
-        console.log("AOP Error", "Unsupported advice type:  " + type);
+    switch(type){
+        case 'before':
+            f = function () {
+                var result = adviser.apply(advised, arguments);		    // Invoke the advice.
+                result = result && !transfer ? [result] : null;
+                return $execute.apply(advised, result || arguments);	// Call the original function.
+            };
+            break;
+        case 'after':
+            f = function () {
+                var result = $execute.apply(advised, arguments);	// Call the original function and store the result.
+                result = result && !transfer ? [result] : null;
+                return adviser.apply(advised, result || arguments);				// Invoke the advice.
+            };
+            break;
+        case 'around':
+            var invocation = {
+                proceed: function () {
+                    return this.method.apply(this, this.args);
+                }
+            };
+            f = function () {
+                invocation.args = arguments;
+                invocation.method = $execute;
+                invocation.name = advisedFunc;
+                return adviser(invocation);
+            };
+            break;
+        default:
+            console.log("AOP Error", "Unsupported advice type:  " + type);
     }
 
     if (standalone) {
