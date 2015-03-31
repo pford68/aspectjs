@@ -5,7 +5,7 @@ Example
 
 ```javascript
 
-addAdvice(myGreatAdvice, "someOtherMethod").after(myGreatObject, "someMethod");
+aspectjs.addAdvice(myGreatAdvice, "someOtherMethod").after(myGreatObject, "someMethod");
 
 ```
 
