@@ -25,14 +25,17 @@ Takes an object and a string for a method name.  The method will used for advice
 ### Methods of the Advice object
 
 #### before(joinpoint, [methodname])
-Adds the advice in the Advice object before the specified join point.  The join point can be either a function or an object followed by a method name.
+Adds the advice in the Advice object before the specified join point.  The join point can be either a function 
+or an object followed by a method name.  Returns the new wrapped function.
 
 #### after(joinpoint, [methodname])
-Adds the advice in the Advice object after the specified join point.  The join point can be either a function or an object followed by a method name.
+Adds the advice in the Advice object after the specified join point.  The join point can be either a function 
+or an object followed by a method name.  Returns the new wrapped function.
 
 
 #### around(joinpoint, [methodname])
-Adds the advice in the Advice object around the specified join point.  The join point can be either a function or an object followed by a method name.
+Adds the advice in the Advice object around the specified join point.  The join point can be either a function
+or an object followed by a method name.  Returns the new wrapped function.
 
 
 ## Usage
