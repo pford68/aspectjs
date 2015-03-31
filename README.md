@@ -23,7 +23,6 @@ Adds the advice in the Advice object after the specified join point.  The join p
 #### around(joinpoint, [methodname])
 Adds the advice in the Advice object around the specified join point.  The join point can be either a function or an object followed by a method name.
 
- 
 
 ## Usage
 ### Standalone functions
