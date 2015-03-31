@@ -1,6 +1,30 @@
 A simple AOP implementation for Node.  It works either with standalone functions or with object methods.  And be used
 on the client-side with Browserify too.
 
+## API Documentation
+
+### Methods of aspectjs
+
+#### addAdvice(advice)
+Takes a standalone function that will be used for advice and returns an Advice object
+
+#### addAdvice(adviceObj, methodName)
+Takes an object and a string for a method name.  The method will used for advice.  addAdvice() returns an Advice object.
+
+### Methods of the Advice object
+
+#### before(joinpoint, [methodname])
+Adds the advice in the Advice object before the specified join point.  The join point can be either a function or an object followed by a method name.
+
+#### after(joinpoint, [methodname])
+Adds the advice in the Advice object after the specified join point.  The join point can be either a function or an object followed by a method name.
+
+
+#### around(joinpoint, [methodname])
+Adds the advice in the Advice object around the specified join point.  The join point can be either a function or an object followed by a method name.
+
+ 
+
 ## Usage
 ### Standalone functions
 Both the advice and joinpoints can be standalone functions:  
