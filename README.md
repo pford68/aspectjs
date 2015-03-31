@@ -7,6 +7,9 @@ Example
 
 aspectjs.addAdvice(myGreatAdvice, "someOtherMethod").after(myGreatObject, "someMethod");
 
+// Thereafter whenever myGreatObject.someMethod is called, 
+// myGreatAdvice.someOtherMethod will be called automatically afterward.
+
 ```
 
 ## API Documentation
