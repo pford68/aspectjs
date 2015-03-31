@@ -36,6 +36,19 @@ or an object followed by a method name.  Returns the new wrapped function.
 #### around(joinpoint, [methodname])
 Adds the advice in the Advice object around the specified join point.  The join point can be either a function
 or an object followed by a method name.  Returns the new wrapped function.
+These method requires an advice function/method that takes an Invocation object.  Within the advice body,
+invocation.proceed() should be called where the joinpoint should occur.
+
+```javascript
+
+// Example advice object for around advice
+adviser = {adviseFunction: function(invocation){
+    // Some code goes here.
+    invocation.proceed();   // Calls the original function.
+    // Some more code goes here.
+}};
+
+```
 
 
 ## Usage
@@ -76,6 +89,33 @@ addAdvice(adviser, "override").before(advised, "add");
 advised.add(2);  // Should equal 4.  
             
 ```
+
+### Around advice
+```javascript
+
+var advised, adviser, result;
+advised = {
+   add: function(increment){
+       this.left += increment; 
+   }, 
+   id: 'test', 
+   left: 32, 
+   top: 43
+};
+
+// The advice function/method should take an Invocation object as input.
+// Then invocation.proceed() should be called where the joinpoint occurs.
+adviser = {
+   override: function(invocation){
+       advised.left += 5; // 37
+       invocation.proceed(); // 39
+       advised.left -= 19;
+   }
+};
+
+addAdvice(adviser, "override").around(advised, "add");
+
+````
 
 ## Links
 * NPM:  https://www.npmjs.com/package/aspectjs/
