@@ -63,3 +63,6 @@ advised.add(2);  // Should equal 4.
             
 ```
 
+## Links
+* NPM:  https://www.npmjs.com/package/aspectjs/
+
