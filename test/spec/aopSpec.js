@@ -4,7 +4,7 @@
  */
 var addAdvice = require("../../index").addAdvice;
 
-describe("aop", function(){
+describe("aspectjs", function(){
 
     describe("before()", function(){
         it("should add new behavior before the original function", function(){
