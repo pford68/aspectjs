@@ -16,11 +16,9 @@ aspectjs.addAdvice(myGreatAdvice, "someOtherMethod").after(myGreatObject, "someM
 
 ### Methods of aspectjs
 
-#### addAdvice(advice)
-Takes a standalone function that will be used for advice and returns an Advice object
-
-#### addAdvice(adviceObj, methodName)
-Takes an object and a string for a method name.  The method will used for advice.  addAdvice() returns an Advice object.
+#### addAdvice([thisArg,] function|string)
+Takes either a standalone function, or a combination of a object and a string for a method name, that will be used for advice.
+Returns an Advice object.n
 
 ### Methods of the Advice object
 
