@@ -25,7 +25,7 @@
     "aspect"
   ],
   "author": "Philip Ford",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/pford68/aspectjs/issues"
   },
