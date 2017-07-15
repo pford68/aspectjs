@@ -5,7 +5,7 @@ const gutil = require('gulp-util');
 const jsdoc = require('gulp-jsdoc3');
 const jshint = require('gulp-jshint');
 const jasmine = require('gulp-jasmine');
-const src = './lib/**/*.js';
+const src = './index.js';
 
 
 //======================================================================== Tasks
@@ -36,4 +36,9 @@ Test task
 gulp.task('test', () => {
     gulp.src('test/spec/*.js')
         .pipe(jasmine());
+});
+
+
+gulp.task('default', ['lint', 'test', 'doc'], done => {
+    done();
 });

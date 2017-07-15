@@ -2,76 +2,79 @@
  * Test suite for AspectJS
  *
  */
-var addAdvice = require("../../index").addAdvice;
+const aop = require("../../index");
+const before = aop.before;
+const after = aop.after;
+const around = aop.around;
 
-describe("aspectjs", function(){
+describe("aspectjs", () => {
 
     describe("before()", function(){
-        it("should add new behavior before the original function", function(){
-            var advised, adviser, result;
+        it("should add new behavior before the original function", () => {
+            let advised, adviser, result;
             advised = {add: function(increment){this.left += increment; }, id: 'test', left: 32, top: 43};
             adviser = {override: function(increment){ advised.left = increment; }};
 
-            addAdvice(adviser, "override").before(advised, "add");
+            before(advised, "add").add(adviser, "override");
             advised.add(2);
 
             expect(advised.left).toEqual(4);
         });
 
-        it("should pass the result of the new function to the advised function if transfer is false.", function(){
-            var advised, adviser, result;
+        it("should pass the result of the new function to the advised function if transfer is false.", () => {
+            let advised, adviser, result;
             advised = {add: function(increment){this.left += increment; }, id: 'test', left: 32, top: 43};
             adviser = {override: function(increment){ return 6 + increment; }};
 
-            addAdvice(adviser, "override", false).before(advised, "add");
+            before(advised, "add").add(adviser, "override", false);
             advised.add(4);
 
             expect(advised.left).toEqual(42);
         });
 
-        it("should work with standalone functions too", function(){
-            var obj = {id :3};
-            var advised = function(){
+        it("should work with standalone functions too", () => {
+            let obj = {id :3};
+            let advised = function(){
                 return obj.id - 2;
             };
-            var adviser = function(){
+            let adviser = function(){
                 obj.id = 11;
             };
-            advised = addAdvice(adviser).before(advised);
+            advised = before(advised).add(adviser);
             expect(advised()).toEqual(9);
         });
 
     });
 
-    describe("after()", function(){
-        it("should add new behavior after the advised function", function(){
-            var advised, adviser, result;
+    describe("after()", () => {
+        it("should add new behavior after the advised function", () => {
+            let advised, adviser, result;
             advised = {add: function(increment){this.left += increment; }, id: 'test', left: 32, top: 43};
             adviser = {override: function(increment){ advised.left = increment; }};
 
-            addAdvice(adviser, "override").after(advised, "add");
+            after(advised, "add").add(adviser, "override");
             advised.add(2);
 
             expect(advised.left).toEqual(2);
         });
 
-        it("should pass the advised function's result to the adviser if transfer is false.", function(){
-            var advised, adviser, result;
+        it("should pass the advised function's result to the adviser if transfer is false.", () => {
+            let advised, adviser, result;
             advised = {add: function(increment){ return this.left + increment; }, id: 'test', left: 32, top: 43};
             adviser = {override: function(increment){ advised.left -= increment; }};
 
-            addAdvice(adviser, "override", false).after(advised, "add");
+            after(advised, "add").add(adviser, "override", false);
             advised.add(2);
 
             expect(advised.left).toEqual(-2);
         });
 
-        it("should pass the original arguments to the adviser if transfer is false, but the advised function does not return a result.", function(){
-            var advised, adviser, result;
+        it("should pass the original arguments to the adviser if transfer is false, but the advised function does not return a result.", () => {
+            let advised, adviser, result;
             advised = {add: function(increment){ this.left += increment; }, id: 'test', left: 32, top: 43};
             adviser = {override: function(increment){ advised.left -= increment; }};
 
-            addAdvice(adviser, "override", false).after(advised, "add");
+            after(advised, "add").add(adviser, "override", false);
             advised.add(2);
 
             expect(advised.left).toEqual(32);
@@ -80,8 +83,8 @@ describe("aspectjs", function(){
 
 
     describe("around()", function(){
-        it("should add new behavior before and after the original function", function(){
-            var advised, adviser, result;
+        it("should add new behavior before and after the original function", () => {
+            let advised, adviser, result;
             advised = {add: function(increment){this.left += increment; }, id: 'test', left: 32, top: 43};
             adviser = {override: function(invocation){
                 advised.left += 5; // 37
@@ -89,7 +92,7 @@ describe("aspectjs", function(){
                 advised.left -= 19;
             }};
 
-            addAdvice(adviser, "override").around(advised, "add");
+            around(advised, "add").add(adviser, "override");
             advised.add(2);
 
             expect(advised.left).toEqual(20);
@@ -102,11 +105,11 @@ describe("aspectjs", function(){
                     invocation.proceed();
                 }
             }
-            error = addAdvice(suppress).around(error);
+            error = around(error).add(suppress);
             try {
                 error();
             } catch(e){
-                this.fail("The error should not have been thrown.");
+                fail("The error should not have been thrown.");
             }
         });
     });
