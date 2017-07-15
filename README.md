@@ -39,12 +39,6 @@ invocation.proceed() should be called where the joinpoint should occur.  The adv
 applied only after `add()` is called on the returned advice object.
 
 
-### Methods of the advice object
-#### add([thisArg,] function|string)
-Returns the new function that wraps the original function passed to before(), after(), or around().
-
-
-
 ```javascript
 
 // Example advice object for around advice
@@ -55,6 +49,14 @@ adviser = {adviseFunction: function(invocation){
 }};
 
 ```
+
+
+### Methods of the advice object
+#### add([thisArg,] function|string)
+Returns the new function that wraps the original function passed to before(), after(), or around().
+
+
+
 
 
 ## Usage
