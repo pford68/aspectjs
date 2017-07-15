@@ -84,7 +84,7 @@ module.exports = {
             add: function(adviser, method = null, transfer = true){
                 return addAdvice("before", advised, advisedFunc, adviser, method, transfer);
             }
-        }
+        };
     },
 
     /**
@@ -101,7 +101,7 @@ module.exports = {
             add: function(adviser, method = null, transfer = true){
                 return addAdvice("after", advised, advisedFunc, adviser, method, transfer);
             }
-        }
+        };
     },
 
     /**
@@ -118,7 +118,7 @@ module.exports = {
             add: function(adviser, method = null, transfer = true){
                 return addAdvice("around", advised, advisedFunc, adviser, method, transfer);
             }
-        }
+        };
     }
 };
 
