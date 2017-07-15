@@ -37,3 +37,8 @@ gulp.task('test', () => {
     gulp.src('test/spec/*.js')
         .pipe(jasmine());
 });
+
+
+gulp.task('default', ['lint', 'test', 'doc'], done => {
+    done();
+});

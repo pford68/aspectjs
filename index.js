@@ -4,10 +4,8 @@
  * @author Philip Ford
  */
 
-var _ = require('underscore');
-
 function weave(type, advised, advisedFunc, aopProxy) {
-    var f, $execute, standalone = false,
+    let f, $execute, standalone = false,
         transfer = aopProxy.transfer,
         adviser = aopProxy.adviser;
 
@@ -22,20 +20,20 @@ function weave(type, advised, advisedFunc, aopProxy) {
     switch(type){
         case 'before':
             f = function () {
-                var result = adviser.apply(advised, arguments);		    // Invoke the advice.
+                let result = adviser.apply(advised, arguments);		    // Invoke the advice.
                 result = result && !transfer ? [result] : null;
                 return $execute.apply(advised, result || arguments);	// Call the original function.
             };
             break;
         case 'after':
             f = function () {
-                var result = $execute.apply(advised, arguments);	// Call the original function and store the result.
+                let result = $execute.apply(advised, arguments);	// Call the original function and store the result.
                 result = result && !transfer ? [result] : null;
                 return adviser.apply(advised, result || arguments);				// Invoke the advice.
             };
             break;
         case 'around':
-            var invocation = {
+            let invocation = {
                 proceed: function () {
                     return this.method.apply(this, this.args);
                 }
@@ -59,76 +57,68 @@ function weave(type, advised, advisedFunc, aopProxy) {
 
 }
 
+function addAdvice(type, advised, advisedFunc, adviser, method, transfer) {
+    adviser = method ? adviser[method].bind(adviser) : adviser;
+    if (typeof adviser !== 'function') {
+        throw new TypeError("[aop] An adviser function is required in addAdvice.");
+    }
+    return weave(type, advised, advisedFunc, { adviser: adviser, transfer: transfer });
+}
+
 
 //======================================================================== Public methods
 
-/**
- * To access these methods, you must call addAdvice() to return a correct Advice object.
- *
- * @type {Object}
- */
-var blueprint = {
-
-    //transfer: true,     // Whether to pass the function arguments along to the other wrapped function.
+module.exports = {
 
     /**
-     * <p>Causes the adviser to be executed before every call to advised[advisedFunc].</p>
-     * <p>If the adviser returns a result, and you want that result, instead of the parameters,
-     * to be passed to the wrapped function, set the transfer parameter is set to "false" when
-     * calling addAdvice().  That parameter defaults to true.</p>
+     * Adds before advice to the specified method/function. Returns an object containing an
+     * add() method.  Once add() is called, the advice is applied.  The new wrapped function
+     * is returned form add().
      *
-     * @param {Object | Function} advised The function to be advised or the object containing method to be advised
-     * @param {String} [advisedFunc] The name of the function that represents the pointcut
+     * @param advised
+     * @param advisedFunc
+     * @returns {{add: add}}
      */
     before: function (advised, advisedFunc) {
-        return weave("before", advised, advisedFunc, this);
+        return {
+            add: function(adviser, method = null, transfer = true){
+                return addAdvice("before", advised, advisedFunc, adviser, method, transfer);
+            }
+        }
     },
 
     /**
-     * <p>Causes adviser to be executed after every call to advised[advisedFunc].</p>
-     * <p>If the original function returns a result, and you want that result, instead of the parameters,
-     * to be passed to the advising function, set the transfer parameter is set to "false" when
-     * calling addAdvice().  That parameter defaults to true.</p>
+     * Adds after advice to the specified method/function. Returns an object containing an
+     * add() method.  Once add() is called, the advice is applied.  The new wrapped function
+     * is returned form add().
      *
-     * @param {Object | Function} advised The function to be advised or the object containing method to be advised
-     * @param {String} [advisedFunc] The name of the function that represents the pointcut
+     * @param advised
+     * @param advisedFunc
+     * @returns {{add: add}}
      */
     after: function (advised, advisedFunc) {
-        return weave("after", advised, advisedFunc, this);
+        return {
+            add: function(adviser, method = null, transfer = true){
+                return addAdvice("after", advised, advisedFunc, adviser, method, transfer);
+            }
+        }
     },
 
     /**
-     * <p>Wraps advised[advisedFunc] within adviser.  In order to work the advising function
-     * (adviser) must have a parameter representing an "invocation" and must call invocation.proceed()
-     * where the original function should be called.</p>
+     * Adds around advice to the specified method/function. Returns an object containing an
+     * add() method.  Once add() is called, the advice is applied.  The new wrapped function
+     * is returned form add().
      *
-     * <p>The transfer parameter has no effect on this method.</p>
-     *
-     * @param {Object | Function} advised  The function to be advised or the object containing method to be advised
-     * @param {String} [advisedFunc] The name of the function that represents the pointcut
+     * @param advised
+     * @param advisedFunc
+     * @returns {{add: add}}
      */
     around: function (advised, advisedFunc) {
-        return weave("around", advised, advisedFunc, this);
-    }
-};
-
-
-/**
- * Creates an Advice object with methods for adding advice to another function or object method.
- *
- * @param {Object | Function} adviser The function that will add advice, or the object whose method will do so
- * @param {String | Function} [method] The method, or the name of the method, that will add advice
- * @param {boolean} [transfer] Whether to pass the function arguments, defaults to true.
- */
-module.exports = {
-    addAdvice: function (adviser, method, transfer) {
-        adviser = method ? adviser[method].bind(adviser) : adviser;
-        if (typeof adviser !== 'function') {
-            throw new TypeError("An adviser function is required in addAdvice", "core/aop.js");
+        return {
+            add: function(adviser, method = null, transfer = true){
+                return addAdvice("around", advised, advisedFunc, adviser, method, transfer);
+            }
         }
-        return Object.seal(_.extend(Object.create(blueprint), {
-            adviser: adviser,
-            transfer: transfer != null ? transfer : true
-        }));
     }
 };
+
