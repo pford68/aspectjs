@@ -24,13 +24,13 @@ Will add advice before the specified join point, once `add()` is called.  The jo
 or an object followed by a method name.  Returns the advice object.
 
 #### after(joinpoint, [methodname])
-Will the advice in the Advice object after the specified join point, once `add()` is called.  
+Will add the advice after the specified join point, once `add()` is called.  
 The join point can be either a function or an object followed by a method name.  
 Returns the he advice object.
 
 
 #### around(joinpoint, [methodname])
-Adds the advice in the Advice object around the specified join point,  once `add()` is called.  
+Adds the advice round the specified join point,  once `add()` is called.  
 The join point can be either a function or an object followed by a method name.  
 Returns the advice object.
 

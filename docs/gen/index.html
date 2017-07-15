@@ -88,37 +88,38 @@
     <section class="readme-section">
         <article><p>A simple AOP implementation for Node.  It works either with standalone functions or with object methods.  It can be used
 on the client-side with Browserify too.</p>
+<p><img src="https://travis-ci.org/pford68/aspectjs.svg?branch=master" alt="Build Status">
+<a href="https://badge.fury.io/js/aspectjs"><img src="https://badge.fury.io/js/aspectjs.svg" alt="npm version"></a></p>
 <p>Example</p>
-<pre class="prettyprint source lang-javascript"><code>
-aspectjs.addAdvice(myGreatAdvice, &quot;someOtherMethod&quot;).after(myGreatObject, &quot;someMethod&quot;);
+<pre class="prettyprint source lang-javascript"><code>aspectjs.after(myGreatObject, &quot;someMethod&quot;).add(myGreatAdvice, &quot;someOtherMethod&quot;);
 
 // Thereafter whenever myGreatObject.someMethod is called, 
-// myGreatAdvice.someOtherMethod will be called automatically afterward.</code></pre><h2>API Documentation</h2><h3>Methods of aspectjs</h3><h4>addAdvice([thisArg,] function|string)</h4><p>Takes either a standalone function, or a combination of an object and a string for a method name, that will be used for advice.
-Returns an Advice object.</p>
-<h3>Methods of the Advice object</h3><h4>before(joinpoint, [methodname])</h4><p>Adds the advice in the Advice object before the specified join point.  The join point can be either a function 
-or an object followed by a method name.  Returns the new wrapped function.</p>
-<h4>after(joinpoint, [methodname])</h4><p>Adds the advice in the Advice object after the specified join point.  The join point can be either a function 
-or an object followed by a method name.  Returns the new wrapped function.</p>
-<h4>around(joinpoint, [methodname])</h4><p>Adds the advice in the Advice object around the specified join point.  The join point can be either a function
-or an object followed by a method name.  Returns the new wrapped function.
-These method requires an advice function/method that takes an Invocation object.  Within the advice body,
-invocation.proceed() should be called where the joinpoint should occur.</p>
+// myGreatAdvice.someOtherMethod will be called automatically afterward.</code></pre><h2>API Documentation</h2><p>All of the following methods of aspectjs return an &quot;advice object&quot; that contains an <code>add()</code> method,
+which applies the advice setup in after(), before(), or around().</p>
+<h3>Methods of aspectjs</h3><h4>before(joinpoint, [methodname])</h4><p>Will add advice before the specified join point, once <code>add()</code> is called.  The join point can be either a function 
+or an object followed by a method name.  Returns the advice object.</p>
+<h4>after(joinpoint, [methodname])</h4><p>Will the advice in the Advice object after the specified join point, once <code>add()</code> is called.<br>The join point can be either a function or an object followed by a method name.<br>Returns the he advice object.</p>
+<h4>around(joinpoint, [methodname])</h4><p>Adds the advice in the Advice object around the specified join point,  once <code>add()</code> is called.<br>The join point can be either a function or an object followed by a method name.<br>Returns the advice object.</p>
+<p>These method requires an advice function/method that takes an Invocation object.  Within the advice body,
+invocation.proceed() should be called where the joinpoint should occur.  The advice is 
+applied only after <code>add()</code> is called on the returned advice object.</p>
 <pre class="prettyprint source lang-javascript"><code>
 // Example advice object for around advice
 adviser = {adviseFunction: function(invocation){
     // Some code goes here.
     invocation.proceed();   // Calls the original function.
     // Some more code goes here.
-}};</code></pre><h2>Usage</h2><h3>Standalone functions</h3><p>Both the advice and joinpoints can be standalone functions:  </p>
-<p><code>aspectjs.addAdvice(advice).before(joinpoint)</code></p>
+}};</code></pre><h3>Methods of the advice object</h3><h4>add([thisArg,] function|string)</h4><p>Returns the new function that wraps the original function passed to before(), after(), or around().</p>
+<h2>Usage</h2><h3>Standalone functions</h3><p>Both the advice and joinpoints can be standalone functions:  </p>
+<p><code>aspectjs.before(joinpoint).add(advice).</code></p>
 <p>Or the advice can be an object method, while the joinpoint is standalone: </p>
-<p><code>aspectjs.addAdvice(advice, 'methodname').after(joinpoint)</code></p>
+<p><code>aspectjs..after(joinpoint).add(advice, 'methodname')</code></p>
 <h3>Object methods</h3><p>Both the advice and joinpoint can be object methods: </p>
-<p><code>aspectjs.addAdvice(adviceObj, 'methodname').before(joinpointObj, 'methodname')</code></p>
-<h2>Examples</h2><h3>Before advice</h3><pre class="prettyprint source lang-javascript"><code>
-var addAdvice = require(&quot;aspectjs&quot;).addAdvice;
+<p><code>aspectjs.before(joinpointObj, 'methodname').add(adviceObj, 'methodname')</code></p>
+<h2>Examples</h2><h3>Before advice</h3><pre class="prettyprint source lang-javascript"><code>const before = require('aspectjs').before;
+let addAdvice = require(&quot;aspectjs&quot;).addAdvice;
 
-var advised, adviser, result;
+let advised, adviser, result;
 advised = {
    add: function(increment){this.left += increment; }, 
    id: 'test', 
@@ -129,9 +130,9 @@ adviser = {
    override: function(increment){ advised.left = increment; }
 };
 
-addAdvice(adviser, &quot;override&quot;).before(advised, &quot;add&quot;);
-advised.add(2);  // Should equal 4.</code></pre><h3>Around advice</h3><pre class="prettyprint source lang-javascript"><code>
-var advised, adviser, result;
+before(advised, &quot;add&quot;).add(adviser, &quot;override&quot;);
+advised.add(2);  // Should equal 4.</code></pre><h3>Around advice</h3><pre class="prettyprint source lang-javascript"><code>const around = require('aspectjs').around;
+let advised, adviser, result;
 advised = {
    add: function(increment){
        this.left += increment; 
@@ -151,9 +152,7 @@ adviser = {
    }
 };
 
-addAdvice(adviser, &quot;override&quot;).around(advised, &quot;add&quot;);
-
-`</code></pre><h2>Links</h2><ul>
+around(advised, &quot;add&quot;).add(adviser, &quot;override&quot;);</code></pre><h2>Links</h2><ul>
 <li>NPM:  https://www.npmjs.com/package/aspectjs/</li>
 </ul></article>
     </section>
@@ -201,7 +200,7 @@ addAdvice(adviser, &quot;override&quot;).around(advised, &quot;add&quot;);
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.3</a>
 	
-		on July 15th 2017, 7:10:29 am
+		on July 15th 2017, 7:50:16 am
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>
