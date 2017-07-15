@@ -1,6 +1,9 @@
 A simple AOP implementation for Node.  It works either with standalone functions or with object methods.  It can be used
 on the client-side with Browserify too.
 
+![Build Status](https://travis-ci.org/pford68/aspectjs.svg?branch=master)
+[![npm version](https://badge.fury.io/js/aspectjs.svg)](https://badge.fury.io/js/aspectjs)
+
 Example
 
 ```javascript
