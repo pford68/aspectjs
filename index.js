@@ -57,17 +57,38 @@ function weave(type, advised, advisedFunc, aopProxy) {
 
 }
 
-function addAdvice(type, advised, advisedFunc, adviser, method, transfer) {
+
+
+
+/*
+ Advisor class
+ */
+function Advisor(type, advised, advisedFunc = null){
+    this.type = type;
+    this.advised = advised;
+    this.advisedMethod = advisedFunc;
+    Object.freeze(this);
+}
+/**
+ * Applies advice
+ *
+ * @param adviser
+ * @param method
+ * @param transfer
+ * @returns {*}
+ */
+Advisor.prototype.add = function(adviser, method = null, transfer = true){
+
     adviser = method ? adviser[method].bind(adviser) : adviser;
     if (typeof adviser !== 'function') {
         throw new TypeError("[aop] An adviser function is required in addAdvice.");
     }
-    return weave(type, advised, advisedFunc, { adviser: adviser, transfer: transfer });
-}
+    return weave(this.type, this.advised, this.advisedMethod, { adviser: adviser, transfer: transfer });
+};
+Object.freeze(Advisor.prototype);  // Freezing all copies
 
 
 //======================================================================== Public methods
-
 module.exports = {
 
     /**
@@ -77,14 +98,10 @@ module.exports = {
      *
      * @param advised
      * @param advisedFunc
-     * @returns {{add: add}}
+     * @returns {Advisor}
      */
-    before: function (advised, advisedFunc) {
-        return {
-            add: function(adviser, method = null, transfer = true){
-                return addAdvice("before", advised, advisedFunc, adviser, method, transfer);
-            }
-        };
+    before: function (advised, advisedFunc = null) {
+        return new Advisor('before', advised, advisedFunc);
     },
 
     /**
@@ -94,14 +111,10 @@ module.exports = {
      *
      * @param advised
      * @param advisedFunc
-     * @returns {{add: add}}
+     * @returns {Advisor}
      */
     after: function (advised, advisedFunc) {
-        return {
-            add: function(adviser, method = null, transfer = true){
-                return addAdvice("after", advised, advisedFunc, adviser, method, transfer);
-            }
-        };
+        return new Advisor('after', advised, advisedFunc);
     },
 
     /**
@@ -111,14 +124,10 @@ module.exports = {
      *
      * @param advised
      * @param advisedFunc
-     * @returns {{add: add}}
+     * @returns {Advisor}
      */
     around: function (advised, advisedFunc) {
-        return {
-            add: function(adviser, method = null, transfer = true){
-                return addAdvice("around", advised, advisedFunc, adviser, method, transfer);
-            }
-        };
+        return new Advisor('around', advised, advisedFunc);
     }
 };
 
