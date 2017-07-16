@@ -1,6 +1,6 @@
 {
   "name": "aspectjs",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "description": "A simple AOP implementation for Node.",
   "main": "index.js",
   "directories": {
