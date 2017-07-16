@@ -9,6 +9,7 @@ const around = aop.around;
 
 describe("aspectjs", () => {
 
+
     describe("before()", function(){
         it("should add new behavior before the original function", () => {
             let advised, adviser, result;
@@ -113,5 +114,96 @@ describe("aspectjs", () => {
             }
         });
     });
+
+
+    describe("Advisor", function(){
+        'use strict';
+
+        function attemptOverride(advisor){
+            try {
+                advisor.add = function(){ console.log('Hi!'); };
+                fail('We should not reach this point.');
+            } catch (e){
+                console.log('Success:  was NOT able to edit the add method');
+            }
+        }
+
+        function attemptOverrideByExtension(advisor){
+            try {
+                let test = Object.create(advisor);
+                test.add = function(){ console.log('Hi!'); };
+                fail('We should not reach this point.');
+            } catch(e){
+                console.log('Success:  was NOT able to edit the add method in a copy of the object');
+            }
+        }
+
+        function attemptReplace(advisor){
+            try {
+                advisor.advised = 'gfhgfjhfjghjhgj';
+                console.log(advisor.advised);
+                fail('We should not reach this point.');
+            } catch (e){
+                console.log('Success:  was NOT able to edit the advised property');
+            }
+
+            try {
+                advisor.advisedMethod = 'gfhgfjhfjghjhgj';
+                console.log(advisor.advisedMethod);
+                fail('We should not reach this point.');
+            } catch (e){
+                console.log('Success:  was NOT able to edit the advisedMethod property');
+            }
+
+            try {
+                advisor.type = 'gfhgfjhfjghjhgj';
+                console.log(advisor.type);
+                fail('We should not reach this point.');
+            } catch (e){
+                console.log('Success:  was NOT able to edit the type property');
+            }
+        }
+
+        let advised = {sum: function(increment){this.left += increment; }, id: 'test', left: 32, top: 43};
+
+        it('should not be editable', () => {
+            let advisor = before(advised, 'sum');
+            expect(Object.isFrozen(advisor)).toBeTruthy();
+            expect(Object.isExtensible(advisor)).toBeFalsy();
+
+            attemptReplace(advisor);
+        });
+
+
+        it('should not allow the add() to be changed', () => {
+            let advisor = after(advised, 'sum');
+            attemptOverride(advisor)
+        });
+
+        it('should be totally frozen when returned from any API method:  before, after, or around', () => {
+            let afterAdvisor = after(advised, 'sum');
+            attemptReplace(afterAdvisor);
+            attemptOverride(afterAdvisor);
+
+            let beforeAdvisor = before(advised, 'sum');
+            attemptReplace(beforeAdvisor);
+            attemptOverride(beforeAdvisor);
+
+            let aroundAdvisor = around(advised, 'sum');
+            attemptReplace(aroundAdvisor);
+            attemptOverride(aroundAdvisor);
+        });
+
+        it('should be final, cannot be overriden in extensions', () => {
+            let afterAdvisor = after(advised, 'sum');
+            attemptOverrideByExtension(afterAdvisor);
+
+            let beforeAdvisor = before(advised, 'sum');
+            attemptOverrideByExtension(beforeAdvisor);
+
+            let aroundAdvisor = around(advised, 'sum');
+            attemptOverrideByExtension(aroundAdvisor);
+        });
+    })
 
 });
