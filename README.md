@@ -67,7 +67,7 @@ Both the advice and joinpoints can be standalone functions:
 
 Or the advice can be an object method, while the joinpoint is standalone: 
 
-``aspectjs..after(joinpoint).add(advice, 'methodname')``
+``aspectjs.after(joinpoint).add(advice, 'methodname')``
 
 ### Object methods
 Both the advice and joinpoint can be object methods: 
