@@ -1,18 +1,18 @@
 'use strict';
 
-const gulp = require('gulp');
+const { src, series, task } = require('gulp');
 const jsdoc = require('gulp-jsdoc3');
 const jshint = require('gulp-jshint');
 const jasmine = require('gulp-jasmine');
-const src = './index.js';
+const main = './index.js';
 
 
 //======================================================================== Tasks
 /*
 Generates JSDoc
  */
-gulp.task('doc', cb => {
-    gulp.src(['README.md', src], {read: false})
+task('doc', cb => {
+    src(['README.md', main], {read: false})
         .pipe(jsdoc(cb));
 });
 
@@ -20,8 +20,8 @@ gulp.task('doc', cb => {
 /*
  Linting
  */
-gulp.task('lint', () => {
-    return gulp.src(src)
+task('lint', () => {
+    return src(main)
         .pipe(jshint('.jshintrc'))
         // You can look into pretty reporters as well, but that's another story
         .pipe(jshint.reporter('jshint-stylish'))
@@ -32,11 +32,10 @@ gulp.task('lint', () => {
 /*
 Test task
  */
-gulp.task('test', done => {
-    gulp.src('test/spec/*.js')
-        .pipe(jasmine());
+task('test', done => {
+    src('test/spec/*.js').pipe(jasmine());
     done();
 });
 
 
-gulp.task('default', gulp.series('lint', 'test', 'doc'));
+task('default', series('lint', 'test', 'doc'));
