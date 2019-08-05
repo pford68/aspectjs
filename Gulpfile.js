@@ -32,7 +32,7 @@ gulp.task('lint', () => {
 /*
 Test task
  */
-gulp.task('test', (done) => {
+gulp.task('test', done => {
     gulp.src('test/spec/*.js')
         .pipe(jasmine());
     done();
