@@ -12,7 +12,7 @@ const src = './index.js';
 /*
 Generates JSDoc
  */
-gulp.task('doc', function (cb) {
+gulp.task('doc', cb => {
     gulp.src(['README.md', src], {read: false})
         .pipe(jsdoc(cb));
 });
@@ -33,12 +33,11 @@ gulp.task('lint', () => {
 /*
 Test task
  */
-gulp.task('test', () => {
+gulp.task('test', (done) => {
     gulp.src('test/spec/*.js')
         .pipe(jasmine());
-});
-
-
-gulp.task('default', ['lint', 'test', 'doc'], done => {
     done();
 });
+
+
+gulp.task('default', gulp.series('lint', 'test', 'doc'));
